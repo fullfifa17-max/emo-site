@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMO</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--surface:#0e0e12;--border:#1e1e28;--gold:#c9a54e;--gold2:#e8c45a;--goldDim:#8a7030;--crimson:#8b2252;--crimson2:#b8305a;--crimsonDim:#5a1535;--text:#e0dcd4;--textDim:#7a7670;--textMuted:#3a3835}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* GLOBAL WALLPAPER */
+.bg-wall{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Permanent Marker',cursive;font-size:1.4rem;color:var(--gold);letter-spacing:4px;text-decoration:none;z-index:60}
+.nav-toggle{background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer;z-index:60;font-family:'Permanent Marker',cursive;transition:color 0.3s}
+.nav-toggle.open{color:var(--crimson)}
+
+/* FULLSCREEN OVERLAY NAV */
+.nav-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:55;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;opacity:0;pointer-events:none;transition:opacity 0.4s}
+.nav-overlay.open{opacity:1;pointer-events:all}
+.nav-overlay-bg{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(10,10,10,0.92)}
+.nav-overlay-wall{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden}
+.nav-overlay a{font-family:'Permanent Marker',cursive;font-size:clamp(1.8rem,5vw,3rem);color:var(--textDim);text-decoration:none;letter-spacing:6px;transition:all 0.25s;position:relative;z-index:2}
+.nav-overlay a:hover{color:var(--gold);transform:translateX(15px)}
+.nav-overlay a:hover::before{content:'✕';position:absolute;left:-35px;color:var(--crimson);font-size:0.9rem;top:50%;transform:translateY(-50%)}
+.nav-overlay .nav-foot{position:absolute;bottom:2.5rem;font-size:0.6rem;color:var(--textMuted);letter-spacing:4px;text-transform:uppercase;z-index:2}
+.nav-overlay .nav-discord{margin-top:1rem;background:var(--crimson);color:#fff;padding:12px 30px;font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background 0.2s;z-index:2}
+.nav-overlay .nav-discord:hover{background:var(--crimson2)}
+
+/* Overlay animated symbols */
+.ov-sym{position:absolute;opacity:0;animation:ovFloat ease-in-out infinite;font-family:'Permanent Marker',cursive}
+@keyframes ovFloat{0%{opacity:0;transform:scale(0.5) rotate(0deg)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:scale(1.2) rotate(180deg)}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem 4rem;position:relative;z-index:1}
+.hero-face{position:relative;width:130px;height:140px;margin-bottom:1.5rem}
+.hf-head{width:120px;height:132px;border:2.5px solid var(--gold);border-radius:50% 50% 42% 42%;position:absolute;top:0;left:5px}
+.hf-eye{position:absolute;top:45px;font-family:'Permanent Marker',cursive;font-size:1.8rem;color:var(--crimson)}
+.hf-eye-l{left:23px;animation:blink 4s infinite}
+.hf-eye-r{right:23px;animation:blink 4s 0.1s infinite}
+@keyframes blink{0%,88%,100%{opacity:1}90%{opacity:0}93%{opacity:1}95%{opacity:0}}
+.hf-mouth{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);width:28px;height:2px;background:var(--gold)}
+.hf-tear{position:absolute;top:70px;width:3px;background:linear-gradient(180deg,var(--crimson),transparent);border-radius:0 0 50% 50%;animation:tear 3s infinite}
+.hf-tear-l{left:35px}
+.hf-tear-r{right:33px;animation-delay:1.5s}
+@keyframes tear{0%{height:0;opacity:0;top:68px}30%{opacity:1}100%{height:24px;opacity:0;top:92px}}
+
+.hero-tag{position:relative;margin-bottom:0.5rem}
+.hero-title{font-family:'Permanent Marker',cursive;font-size:clamp(4rem,11vw,9rem);letter-spacing:8px;color:var(--gold);line-height:1;position:relative}
+.hero-title::after{content:'EMO';position:absolute;top:0;left:0;color:var(--crimson);clip-path:polygon(0 72%,100% 72%,100% 100%,0 100%);animation:hGlitch 5s infinite}
+@keyframes hGlitch{0%,88%,100%{transform:translate(0)}90%{transform:translate(-4px,1px)}92%{transform:translate(3px,-1px)}94%{transform:translate(-2px,2px)}96%{transform:translate(4px,0)}}
+.hero-drips{position:absolute;bottom:-20px;left:0;width:100%}
+.hero-drip{position:absolute;width:3px;background:linear-gradient(180deg,var(--gold),var(--crimson),transparent);border-radius:0 0 50% 50%;animation:drip linear infinite}
+.hero-drip:nth-child(1){left:5%;animation-duration:2.5s}
+.hero-drip:nth-child(2){left:20%;animation-duration:3.2s;animation-delay:0.5s}
+.hero-drip:nth-child(3){left:38%;animation-duration:2s;animation-delay:1s}
+.hero-drip:nth-child(4){left:58%;animation-duration:3.5s;animation-delay:0.3s}
+.hero-drip:nth-child(5){left:75%;animation-duration:2.8s;animation-delay:1.6s}
+.hero-drip:nth-child(6){left:92%;animation-duration:3s;animation-delay:0.8s}
+@keyframes drip{0%{height:0;opacity:0}15%{opacity:1}100%{height:45px;opacity:0}}
+
+.hero-sub{font-size:1rem;color:var(--textDim);font-weight:300;margin-top:3rem;margin-bottom:2.5rem;max-width:420px}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn-p{background:var(--gold);color:var(--bg);padding:14px 32px;border:none;font-weight:700;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-decoration:none;font-family:'Inter',sans-serif}
+.btn-p:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 25px rgba(201,165,78,0.15)}
+.btn-g{background:transparent;color:var(--text);padding:14px 32px;border:1px solid var(--border);font-weight:500;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-decoration:none;font-family:'Inter',sans-serif}
+.btn-g:hover{border-color:var(--crimson);color:var(--crimson)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border)}
+.stat-num{font-family:'Permanent Marker',cursive;font-size:1.8rem;color:var(--gold)}
+.stat-label{font-size:0.6rem;color:var(--textMuted);text-transform:uppercase;letter-spacing:2px;margin-top:2px}
+
+/* SECTIONS */
+.section{padding:6rem 2rem;position:relative;z-index:1}
+.section-head{text-align:center;margin-bottom:4rem}
+.section-tag{font-size:0.6rem;color:var(--crimson);letter-spacing:4px;text-transform:uppercase;margin-bottom:0.5rem;font-weight:600}
+.section-title{font-family:'Permanent Marker',cursive;font-size:clamp(1.5rem,4vw,2.3rem);color:var(--gold);letter-spacing:3px}
+
+.features{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.feat{background:var(--surface);border:1px solid var(--border);padding:2rem;position:relative;overflow:hidden;transition:all 0.3s}
+.feat::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--crimson);opacity:0;transition:opacity 0.3s}
+.feat:hover{border-color:var(--crimsonDim);transform:translateY(-3px)}
+.feat:hover::before{opacity:1}
+.feat-icon{font-size:1.4rem;margin-bottom:1rem}
+.feat h3{font-family:'Permanent Marker',cursive;font-size:1rem;color:var(--gold);letter-spacing:1px;margin-bottom:0.5rem}
+.feat p{font-size:0.78rem;color:var(--textDim);line-height:1.7}
+
+.scripts-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.sc{background:var(--surface);border:1px solid var(--border);overflow:hidden;transition:all 0.3s}
+.sc:hover{border-color:var(--goldDim);transform:translateY(-3px)}
+.sc-head{padding:1.5rem;border-bottom:1px solid var(--border);position:relative}
+.sc-head::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--crimson),var(--gold),var(--crimson))}
+.sc-game{font-family:'Permanent Marker',cursive;font-size:1.15rem;color:var(--gold);letter-spacing:2px}
+.sc-tags{display:flex;gap:0.5rem;margin-top:0.5rem;flex-wrap:wrap}
+.tag{padding:3px 10px;font-size:0.58rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.tag-e{background:rgba(78,201,106,0.08);color:#4ec96a;border:1px solid rgba(78,201,106,0.15)}
+.tag-a{background:rgba(139,34,82,0.1);color:var(--crimson2);border:1px solid rgba(139,34,82,0.2)}
+.tag-t{background:rgba(201,165,78,0.08);color:var(--gold);border:1px solid rgba(201,165,78,0.15)}
+.sc-body{padding:1.5rem}
+.sc-feat{list-style:none;margin-bottom:1.5rem}
+.sc-feat li{font-size:0.76rem;color:var(--textDim);padding:4px 0;display:flex;align-items:center;gap:8px}
+.sc-feat li::before{content:'✕';color:var(--crimson);font-size:0.55rem;font-weight:700}
+.sc-foot{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-top:1px solid var(--border)}
+.sc-price{font-family:'Permanent Marker',cursive;font-size:1.3rem;color:var(--gold)}
+.sc-price small{font-size:0.6rem;color:var(--textMuted);font-weight:400;display:block;font-family:'Inter',sans-serif}
+.btn-buy{background:var(--crimson);color:#fff;padding:10px 20px;border:none;font-weight:600;font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif}
+.btn-buy:hover{background:var(--crimson2)}
+.coming{opacity:0.35}.coming .btn-buy{background:var(--border);color:var(--textMuted);cursor:default}
+
+#payment{background:var(--surface)}
+.pay-grid{max-width:800px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem}
+.pay{background:var(--bg);border:1px solid var(--border);padding:1.5rem;text-align:center;transition:all 0.3s}
+.pay:hover{border-color:var(--goldDim)}
+.pay-i{font-size:1.6rem;margin-bottom:0.5rem}
+.pay h4{font-family:'Permanent Marker',cursive;font-size:0.85rem;color:var(--gold);letter-spacing:1px}
+.pay p{font-size:0.6rem;color:var(--textMuted);margin-top:0.2rem}
+
+.steps{max-width:650px;margin:0 auto}
+.step{display:flex;gap:1.5rem;align-items:flex-start;padding:1.5rem 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-n{font-family:'Permanent Marker',cursive;font-size:1.8rem;color:var(--crimson);min-width:35px}
+.step h3{font-family:'Permanent Marker',cursive;font-size:0.95rem;color:var(--gold);letter-spacing:1px;margin-bottom:0.2rem}
+.step p{font-size:0.78rem;color:var(--textDim)}
+
+.faq{max-width:600px;margin:0 auto}
+.faq-i{border-bottom:1px solid var(--border);padding:1.2rem 0}
+.faq-q{font-family:'Permanent Marker',cursive;font-size:0.9rem;color:var(--gold);cursor:pointer;display:flex;justify-content:space-between;align-items:center;letter-spacing:1px}
+.faq-q::after{content:'✕';color:var(--crimson);font-size:0.7rem;transition:transform 0.2s}
+.faq-i.open .faq-q::after{transform:rotate(45deg)}
+.faq-ans{font-size:0.78rem;color:var(--textDim);max-height:0;overflow:hidden;transition:max-height 0.3s,padding 0.3s;line-height:1.7}
+.faq-i.open .faq-ans{max-height:200px;padding-top:0.8rem}
+
+footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;position:relative;z-index:1}
+.f-logo{font-family:'Permanent Marker',cursive;font-size:1.3rem;color:var(--gold);letter-spacing:4px;display:inline-block;margin-bottom:0.5rem}
+.f-links{display:flex;gap:2rem;justify-content:center;margin:0.8rem 0;flex-wrap:wrap}
+.f-links a{color:var(--textMuted);text-decoration:none;font-size:0.7rem;transition:color 0.2s}
+.f-links a:hover{color:var(--gold)}
+.f-copy{font-size:0.6rem;color:var(--textMuted);margin-top:0.8rem}
+
+@media(max-width:768px){
+.hero-stats{gap:1.5rem}
+.features,.scripts-grid{grid-template-columns:1fr}
+.step{flex-direction:column;gap:0.5rem}
+.pay-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-wall" id="bgWall"></div>
+
+<nav>
+<a href="#" class="nav-logo">EMO</a>
+<button class="nav-toggle" id="navBtn" onclick="toggleNav()">☰</button>
+</nav>
+
+<div class="nav-overlay" id="navOv">
+<div class="nav-overlay-bg"></div>
+<div class="nav-overlay-wall" id="ovWall"></div>
+<a href="#features" onclick="closeNav()">Features</a>
+<a href="#scripts" onclick="closeNav()">Scripts</a>
+<a href="#payment" onclick="closeNav()">Payment</a>
+<a href="#how" onclick="closeNav()">Process</a>
+<a href="#faq" onclick="closeNav()">FAQ</a>
+<a href="https://discord.gg/coi" target="_blank" class="nav-discord" onclick="closeNav()">dx9 Discord</a>
+<div class="nav-foot">feel everything ✕ see everything</div>
+</div>
+
+<section class="hero">
+<div class="hero-face">
+<div class="hf-head"></div>
+<div class="hf-eye hf-eye-l">✕</div>
+<div class="hf-eye hf-eye-r">✕</div>
+<div class="hf-tear hf-tear-l"></div>
+<div class="hf-tear hf-tear-r"></div>
+<div class="hf-mouth"></div>
+</div>
+<div class="hero-tag">
+<div class="hero-title">EMO
+<div class="hero-drips"><div class="hero-drip"></div><div class="hero-drip"></div><div class="hero-drip"></div><div class="hero-drip"></div><div class="hero-drip"></div><div class="hero-drip"></div></div>
+</div>
+</div>
+<p class="hero-sub">Custom game scripts with vision. Each one built different. Each one hits different.</p>
+<div class="hero-actions">
+<a href="#scripts" class="btn-p">Browse Scripts</a>
+<a href="#contact" class="btn-g">Contact</a>
+</div>
+<div class="hero-stats">
+<div class="stat"><div class="stat-num">15+</div><div class="stat-label">Games</div></div>
+<div class="stat"><div class="stat-num">∞</div><div class="stat-label">Custom</div></div>
+<div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Support</div></div>
+</div>
+</section>
+
+<section class="section" id="features">
+<div class="section-head"><div class="section-tag">what makes emo different</div><div class="section-title">Not Another Copy Paste</div></div>
+<div class="features">
+<div class="feat"><div class="feat-icon">🎨</div><h3>Themed Per Game</h3><p>Every script has its own visual identity that matches the game. Western wood panels, tactical HUDs, horror overlays. No two look the same.</p></div>
+<div class="feat"><div class="feat-icon">⚙️</div><h3>Full Control</h3><p>Colors, distances, box styles, filters, aim modes. Your script, your settings. Everything adjustable through the in-game panel.</p></div>
+<div class="feat"><div class="feat-icon">🎯</div><h3>Smart Targeting</h3><p>Sticky lock, adjustable FOV, smoothing, multi-mode selection. Per-game hitbox tuning built into every script.</p></div>
+<div class="feat"><div class="feat-icon">💔</div><h3>EMO Engine</h3><p>Custom UI framework. Resizable windows, keybinds, dropdowns, color pickers, notifications. No dependencies.</p></div>
+<div class="feat"><div class="feat-icon">👁️</div><h3>Deep Intel</h3><p>Players, items, vehicles, NPCs, territories, resources, animals. Whatever the game hides, EMO finds it.</p></div>
+<div class="feat"><div class="feat-icon">🔄</div><h3>Kept Alive</h3><p>Games update. Scripts update. You get fixes and new features as long as you own it.</p></div>
+</div>
+</section>
+
+<section class="section" id="scripts">
+<div class="section-head"><div class="section-tag">catalog</div><div class="section-title">Available Scripts</div></div>
+<div class="scripts-grid">
+<div class="sc coming"><div class="sc-head"><div class="sc-game">Coming Soon</div><div class="sc-tags"><span class="tag tag-e">ESP</span><span class="tag tag-a">Aimbot</span><span class="tag tag-t">Themed</span></div></div>
+<div class="sc-body"><ul class="sc-feat"><li>Game scripts dropping soon</li><li>Each with unique themed UI</li><li>Full feature list per game</li><li>Individual pricing</li></ul></div>
+<div class="sc-foot"><div class="sc-price">TBD<small>pricing soon</small></div><button class="btn-buy" disabled>Soon</button></div></div>
+</div>
+</section>
+
+<section class="section" id="payment">
+<div class="section-head"><div class="section-tag">accepted</div><div class="section-title">Payment Methods</div></div>
+<div class="pay-grid">
+<div class="pay"><div class="pay-i">💳</div><h4>PayPal</h4><p>Instant delivery</p></div>
+<div class="pay"><div class="pay-i">💵</div><h4>CashApp</h4><p>Instant delivery</p></div>
+<div class="pay"><div class="pay-i">🎁</div><h4>Gift Cards</h4><p>Amazon, Steam, etc</p></div>
+<div class="pay"><div class="pay-i">₿</div><h4>Crypto</h4><p>BTC, ETH, LTC</p></div>
+</div>
+</section>
+
+<section class="section" id="how">
+<div class="section-head"><div class="section-tag">process</div><div class="section-title">How It Works</div></div>
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div><h3>Pick Your Script</h3><p>Browse the catalog. Every feature listed per game.</p></div></div>
+<div class="step"><div class="step-n">2</div><div><h3>Send Payment</h3><p>DM medic.01 on Discord. Pick your method. Confirm.</p></div></div>
+<div class="step"><div class="step-n">3</div><div><h3>Get Running</h3><p>Receive your script. Paste into dx9ware. Live.</p></div></div>
+</div>
+</section>
+
+<section class="section" id="faq">
+<div class="section-head"><div class="section-tag">questions</div><div class="section-title">FAQ</div></div>
+<div class="faq">
+<div class="faq-i" onclick="this.classList.toggle('open')"><div class="faq-q">Do I need dx9ware?</div><div class="faq-ans">Yes. All EMO scripts run on dx9ware exclusively.</div></div>
+<div class="faq-i" onclick="this.classList.toggle('open')"><div class="faq-q">One-time purchase?</div><div class="faq-ans">Yes. Pay once, own forever. Updates included.</div></div>
+<div class="faq-i" onclick="this.classList.toggle('open')"><div class="faq-q">Custom script requests?</div><div class="faq-ans">DM medic.01 on Discord with the game name. Priced on complexity.</div></div>
+<div class="faq-i" onclick="this.classList.toggle('open')"><div class="faq-q">Script broke after update?</div><div class="faq-ans">Report to medic.01 on Discord. Fixes pushed fast.</div></div>
+<div class="faq-i" onclick="this.classList.toggle('open')"><div class="faq-q">Refunds?</div><div class="faq-ans">No refunds on delivered scripts. Support available for issues.</div></div>
+</div>
+</section>
+
+<section class="section" id="contact" style="text-align:center">
+<div class="section-head"><div class="section-tag">connect</div><div class="section-title">Join The Server</div></div>
+<p style="color:var(--textDim);max-width:400px;margin:0 auto 1.5rem;font-size:0.82rem">Purchases, support, custom requests, updates. DM directly on Discord.</p><div style="font-family:Permanent Marker,cursive;font-size:1.8rem;color:var(--gold);letter-spacing:3px;margin-bottom:0.5rem">medic.01</div><p style="color:var(--textMuted);font-size:0.7rem;margin-bottom:2rem">Discord username — send a friend request</p>
+<a href="https://discord.gg/coi" target="_blank" class="btn-p">dx9ware Discord</a>
+</section>
+
+<footer>
+<div class="f-logo">EMO</div>
+<div class="f-links"><a href="#features">Features</a><a href="#scripts">Scripts</a><a href="#payment">Payment</a><a href="#faq">FAQ</a></div>
+<div class="f-copy">feel everything ✕ see everything</div>
+</footer>
+
+<script>
+// Symbols pool
+const SYM=[
+{t:'✕',c:'#8b2252',s:1},{t:'✕',c:'#5a1535',s:0.7},{t:'♡',c:'#8b2252',s:1.1},
+{t:'💔',c:'',s:0.9},{t:'★',c:'#8a7030',s:0.8},{t:'⚡',c:'#c9a54e',s:0.7},
+{t:'💀',c:'',s:0.8},{t:'⊕',c:'#8a7030',s:0.6},{t:'♡',c:'#5a1535',s:1.3},
+{t:'✕',c:'#3a2015',s:1.5},{t:'☆',c:'#8a7030',s:0.9},{t:'✕',c:'#8b2252',s:0.5},
+{t:'♡',c:'#c9a54e',s:0.6},{t:'⚡',c:'#8a7030',s:0.9},{t:'★',c:'#5a1535',s:1},
+{t:'✕',c:'#c9a54e',s:0.8},{t:'💔',c:'',s:0.7},{t:'☆',c:'#c9a54e',s:1.1}
+];
+
+// Background wallpaper
+(function(){
+const wall=document.getElementById('bgWall');
+const cols=35;
+for(let c=0;c<cols;c++){
+const col=document.createElement('div');
+col.style.cssText=`position:absolute;top:0;left:${c*(100/cols)}%;width:${100/cols}%;height:100%;overflow:hidden`;
+const n=2+Math.floor(Math.random()*3);
+for(let i=0;i<n;i++){
+const s=SYM[Math.floor(Math.random()*SYM.length)];
+const el=document.createElement('span');
+el.textContent=s.t;
+const dur=18+Math.random()*30;
+const del=Math.random()*dur;
+const sz=s.s*(0.6+Math.random()*0.6);
+el.style.cssText=`position:absolute;left:${Math.random()*70}%;font-size:${sz}rem;opacity:0;animation:bgR ${dur}s ${del}s linear infinite;${s.c?'color:'+s.c:''}`;
+col.appendChild(el);
+}
+wall.appendChild(col);
+}
+const st=document.createElement('style');
+st.textContent=`@keyframes bgR{0%{transform:translateY(110vh) rotate(0deg);opacity:0}5%{opacity:0.07}90%{opacity:0.07}100%{transform:translateY(-10vh) rotate(200deg);opacity:0}}`;
+document.head.appendChild(st);
+})();
+
+// Overlay wallpaper — denser, brighter
+function buildOvWall(){
+const wall=document.getElementById('ovWall');
+wall.innerHTML='';
+const count=80;
+for(let i=0;i<count;i++){
+const s=SYM[Math.floor(Math.random()*SYM.length)];
+const el=document.createElement('span');
+el.className='ov-sym';
+el.textContent=s.t;
+const x=Math.random()*100;
+const y=Math.random()*100;
+const dur=4+Math.random()*8;
+const del=Math.random()*dur;
+const sz=s.s*(0.8+Math.random()*1.5);
+const rot=Math.random()*360;
+el.style.cssText=`left:${x}%;top:${y}%;font-size:${sz}rem;animation-duration:${dur}s;animation-delay:${del}s;transform:rotate(${rot}deg);${s.c?'color:'+s.c:''}opacity:0;`;
+wall.appendChild(el);
+}
+}
+buildOvWall();
+
+function toggleNav(){
+const ov=document.getElementById('navOv');
+const btn=document.getElementById('navBtn');
+const open=ov.classList.toggle('open');
+btn.classList.toggle('open');
+btn.textContent=open?'✕':'☰';
+document.body.style.overflow=open?'hidden':'';
+}
+function closeNav(){
+document.getElementById('navOv').classList.remove('open');
+document.getElementById('navBtn').classList.remove('open');
+document.getElementById('navBtn').textContent='☰';
+document.body.style.overflow='';
+}
+</script>
+</body>
+</html>
